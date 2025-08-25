@@ -34,3 +34,29 @@ export const getNote = async (req,res)=>{
         res.status(500).json({ message: "Error fetching note", error: e.message });
     }
 }
+
+//update Note
+
+export const updateNote = async (req,res)=>{
+    try {
+        const {title,content}= req.body;
+        const updateNote = await Note.findByIdAndUpdate(
+            req.params.id,
+            { title, content },
+            { new: true, runValidators: true }
+        )
+        if (!updatedNote) return res.status(404).json({ message: "Note not found" });
+        res.json({ message: "Note updated!", note: updatedNote });
+    }catch (e) {
+        res.status(500).json({ message: "Error updating note", error: err.message });
+    }
+}
+export const deleteNote = async (req, res) => {
+    try {
+        const deletedNote = await Note.findByIdAndDelete(req.params.id);
+        if (!deletedNote) return res.status(404).json({ message: "Note not found" });
+        res.json({ message: "Note deleted!", note: deletedNote });
+    } catch (err) {
+        res.status(500).json({ message: "Error deleting note", error: err.message });
+    }
+};
